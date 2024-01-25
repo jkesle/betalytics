@@ -1,26 +1,34 @@
-﻿using Betalytics.Domain.Entities;
+﻿using Betalytics.Properties;
 using Microsoft.EntityFrameworkCore;
-using OpenQA.Selenium;
+using System.Configuration;
+using Betalytics.DataAccess.Contracts.Database;
 
 namespace Betalytics.DataAccess.Database;
 
-public class ApplicationDbContextFactory : IDbContextFactory<ApplicationDbContext>
+public class ApplicationDbContextFactory : IApplicationDbContextFactory
 {
-    private readonly DatabaseOptions _options;
 
-    public ApplicationDbContextFactory(DatabaseOptions options)
+    public ApplicationDbContextFactory()
     {
-        _options = options;
     }
 
     public ApplicationDbContext CreateDbContext()
     {
         var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
-        return _options.Provider switch
+        var configuredProviderName = Settings.Default.DatabaseProvider;
+        var provider = DatabaseOptions.FromConnectionStringName(configuredProviderName);
+        return provider switch
         {
-            DatabaseProvider.Sqlite => new ApplicationDbContext(optionsBuilder.UseSqlite(_options.ConnectionString).Options),
-            _ => throw new NotSupportedException($"{_options.Provider} is not a supported database provider at this time")
+            DatabaseProvider.Sqlite => new ApplicationDbContext(optionsBuilder.UseSqlite(GenerateSqliteConnectionString()).Options),
+            _ => throw new NotSupportedException($"{provider} is not a supported database provider at this time")
         };
     }
 
+    private static string GenerateSqliteConnectionString()
+    {
+        // Data Source={{LOCALAPPDATA}}\Betalytics\betalytics.sqlite;Version=3
+        var connectionString = Settings.Default.Sqlite;
+        var localAppData = Environment.GetEnvironmentVariable(Resources.LocalAppData);
+        return connectionString.Replace(Resources.AppDataPlaceholder, localAppData);
+    }
 }

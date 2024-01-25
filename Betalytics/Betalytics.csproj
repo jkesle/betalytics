@@ -1,11 +1,22 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>net8.0</TargetFramework>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <UseWPF>True</UseWPF>
+    <StartupObject>Devdroppings.Betalytics.Launch.Betalytics</StartupObject>
+    <ApplicationIcon>Assets\appicon.ico</ApplicationIcon>
+    <BaseOutputPath>bin\</BaseOutputPath>
+    <BaseIntermediateOutputPath />
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <DocumentationFile>Docs\</DocumentationFile>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="Assets\appicon.ico" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.1" />
@@ -17,11 +28,32 @@
     <PackageReference Include="PhantomJS" Version="2.1.1" />
     <PackageReference Include="Selenium.PhantomJS.WebDriver" Version="2.1.1" />
     <PackageReference Include="Selenium.WebDriver" Version="4.17.0" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Domain\Contracts\Services\" />
-    <Folder Include="UI\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="DataAccess\Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="DataAccess\Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+    </None>
   </ItemGroup>
 
 </Project>

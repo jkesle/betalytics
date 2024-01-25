@@ -17,4 +17,9 @@ public class Betalytics
     {
         throw new NotImplementedException();
     }
+
+    private void LoadDatabase()
+    {
+        using var dbContext = 
+    }
 }
